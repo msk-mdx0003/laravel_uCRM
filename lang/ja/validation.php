@@ -132,6 +132,8 @@ return [
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
+            'title' => '件名',
+            'content' => '本文',
         ],
     ],
 
@@ -145,5 +147,10 @@ return [
     | of "email". This simply helps us make our message more expressive.
     |
     */
+    'attributes' => [
+        'title' => '件名',
+        'content' => '本文'
+    ]
+
 ];
 
