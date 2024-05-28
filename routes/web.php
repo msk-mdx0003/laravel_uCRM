@@ -8,6 +8,7 @@ use App\Http\Controllers\InertiaTestController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\AnalysisController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,13 +21,18 @@ use App\Http\Controllers\PurchaseController;
 |
 */
 
+Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
+
 Route::get('/inertia-test', function () {
     return Inertia::render('InertiaTest');
     }
 );
 
 
-
+Route::get('/inertia-test', function () {
+    return Inertia::render('InertiaTest');
+    }
+);
 
 
 Route::resource('items', ItemController::class
