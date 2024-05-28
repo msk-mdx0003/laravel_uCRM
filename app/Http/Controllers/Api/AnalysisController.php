@@ -6,26 +6,37 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Order;
-use Illuminate\Support\Facades\DB;
+use App\Services\AnalysisService;
+use App\Services\DecileService;
 
 class AnalysisController extends Controller
 {
     public function index (Request $request) {
+        //期間指定
         $subQuery = Order::betweenDate($request->startDate, $request->endDate);
 
         if ($request->type === 'perDay') {
-            $subQuery->where('status', true)
-                ->groupBy('id')
-                ->selectRaw('id, sum(subtotal) as totalPerPurchase, 
-                DATE_FORMAT(created_at, "%Y%m%d") as date');
-            
-            $data = DB::table($subQuery)
-                ->groupBy('date')
-                ->selectRaw('date, sum(totalPerPurchase) as total')
-                ->get();
+            //ファットコントローラ対策
+            //サービスへ切り離し
+            list($data, $labels, $totals) = AnalysisService::perDay($subQuery);
+        }
 
-            $labels = $data->pluck('date');
-            $totals = $data->pluck('total');
+        if ($request->type === 'perMonth') {
+            //ファットコントローラ対策
+            //サービスへ切り離し
+            list($data, $labels, $totals) = AnalysisService::perMonth($subQuery);
+        }
+
+        if ($request->type === 'perYear') {
+            //ファットコントローラ対策
+            //サービスへ切り離し
+            list($data, $labels, $totals) = AnalysisService::perYear($subQuery);
+        }
+
+        if ($request->type === 'decile') {
+            //ファットコントローラ対策
+            //サービスへ切り離し
+            list($data, $labels, $totals) = DecileService::decile($subQuery);
         }
 
         return response()->json([
